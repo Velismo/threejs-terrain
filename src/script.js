@@ -3,6 +3,12 @@ import * as THREE from 'three'
 //import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
 
+// Texture loader
+const loader = new THREE.TextureLoader()
+const height = loader.load('height.png')
+const texture = loader.load('/texture.jpg')
+const alpha = loader.load('/alpha.png')
+
 // Debug
 const gui = new dat.GUI()
 
@@ -18,6 +24,12 @@ const geometry = new THREE.PlaneBufferGeometry(3, 3, 64, 64)
 // Materials
 const material = new THREE.MeshStandardMaterial({
     color: 'gray',
+    map: texture,
+    displacementMap: height,
+    displacementScale: 0.6,
+    alphaMap: alpha,
+    transparent: true,
+    depthTest: false,
 })
 
 const plane = new THREE.Mesh(geometry, material)
@@ -30,10 +42,10 @@ gui.add(plane.rotation, 'x').min(0).max(600)
 
 // Lights
 
-const pointLight = new THREE.PointLight(0xffffff, 2)
-pointLight.position.x = 2
-pointLight.position.y = 3
-pointLight.position.z = 4
+const pointLight = new THREE.PointLight(0x00b3ff, 2)
+pointLight.position.x = 0   
+pointLight.position.y = 2
+pointLight.position.z = -2
 scene.add(pointLight)
 
 gui.add(pointLight.position, 'x')
@@ -97,6 +109,14 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  * Animate
  */
 
+document.addEventListener('mousemove', animateTerrain)
+
+let mouseY = 0
+
+function animateTerrain(event) {
+    mouseY = event.clientY
+}
+
 const clock = new THREE.Clock()
 
 const tick = () =>
@@ -106,6 +126,9 @@ const tick = () =>
 
     // Update objects
     // sphere.rotation.y = .5 * elapsedTime
+
+    plane.rotation.z = .5 * elapsedTime
+    plane.material.displacementScale = .3 + mouseY * 0.0008
 
     // Update Orbital Controls
     // controls.update()
