@@ -30,6 +30,7 @@ const material = new THREE.MeshStandardMaterial({
     alphaMap: alpha,
     transparent: true,
     depthTest: false,
+    opacity: 0.2,
 })
 
 const plane = new THREE.Mesh(geometry, material)
@@ -43,9 +44,9 @@ gui.add(plane.rotation, 'x').min(0).max(600)
 // Lights
 
 const pointLight = new THREE.PointLight(0x00b3ff, 2)
-pointLight.position.x = 0   
-pointLight.position.y = 2
-pointLight.position.z = -2
+pointLight.position.x = 0.2   
+pointLight.position.y = 10
+pointLight.position.z = 4.4
 scene.add(pointLight)
 
 gui.add(pointLight.position, 'x')
@@ -63,14 +64,14 @@ gui.addColor(col, 'color').onChange(() => {
  * Sizes
  */
 const sizes = {
-    width: window.innerWidth,
+    width: window.innerWidth * .7,
     height: window.innerHeight
 }
 
 window.addEventListener('resize', () =>
 {
     // Update sizes
-    sizes.width = window.innerWidth
+    sizes.width = window.innerWidth * .7
     sizes.height = window.innerHeight
 
     // Update camera
@@ -100,7 +101,8 @@ scene.add(camera)
  * Renderer
  */
 const renderer = new THREE.WebGLRenderer({
-    canvas: canvas
+    canvas: canvas,
+    alpha: true,
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
